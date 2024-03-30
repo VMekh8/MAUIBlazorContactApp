@@ -1,8 +1,10 @@
 ﻿@page "/addupdatecontactinfo"
-@page "/updatecontactinfo/{Id:int}"
+@page "/updatecontactinfo/{ID:int}"
 @using MAUIBlazorContactApp.Data
 @using MAUIBlazorContactApp.Services.ContactServices
 @inject IContactRepository _contact
+@inject NavigationManager _nav
+
 
 <h3>Add Update Contact Info</h3>
 <div class="container">
@@ -26,18 +28,40 @@
         <input type="text" @bind="UserEmail" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon2">
     </div>
     <button type="submit" class="btn btn-success" @onclick="AddContactInfo">Submit</button>
+    <button type="submit" class="btn btn-info" @onclick="BackToList">Back</button>
 
 </div>
 
 @code {
 
-
+    [Parameter]
+    public int ID { get; set; }
 
     public int UserId = 0;
     public string UserName = "";
     public string UserSurname = "";
     public string UserPhoneNumber = "";
     public string UserEmail = "";
+
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        UserId = ID;
+        if (UserId > 0)
+        {
+            var contact = await _contact.GetContactByIdAsync(UserId);
+            UserName = contact.Name;
+            UserSurname = contact.Surname;
+            UserPhoneNumber = contact.PhoneNumber;
+            UserEmail = contact.Email;
+            this.StateHasChanged();
+        }
+    }
+
+    private void BackToList()
+    {
+        _nav.NavigateTo("contlist");
+    }
 
     private async Task AddContactInfo()
     {
@@ -61,6 +85,7 @@
             {
                 await App.Current.MainPage.DisplayAlert("Updated", "Update Success", "OK");
             }
+            _nav.NavigateTo("contlist");
         }
         else
         {
