@@ -1,4 +1,8 @@
 ﻿@page "/addupdatecontactinfo"
+@using MAUIBlazorContactApp.Data
+@using MAUIBlazorContactApp.Services.ContactServices
+@inject IContactRepository _contact
+
 <h3>Add Update Contact Info</h3>
 <div class="container">
     <div class="input-group mb-3">
@@ -20,12 +24,44 @@
     <div class="input-group mb-3">
         <input type="text" @bind="UserEmail" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon2">
     </div>
+    <button type="submit" class="btn btn-success" @onclick="AddContactInfo">Submit</button>
+
 </div>
 
 @code {
     public int UserId = 0;
     public string UserName = "";
-    public string? UserSurname = "";
+    public string UserSurname = "";
     public string UserPhoneNumber = "";
-    public string? UserEmail = "";
+    public string UserEmail = "";
+
+    private async Task AddContactInfo()
+    {
+        var contact = new ContactInfo()
+            {
+                Id = UserId,
+                Name = UserName,
+                Surname = UserSurname,
+                PhoneNumber = UserPhoneNumber,
+                Email = UserEmail
+            };
+
+        var responce = await _contact.AddUpdateContactAsync(contact);
+        if (responce)
+        {
+            if (UserId == 0)
+            {
+                await App.Current.MainPage.DisplayAlert("Saved", "Save Success", "OK");
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Updated", "Update Success", "OK");
+            }
+        }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Save Failed", "Failured to save data", "OK");
+        }
+    }
+
 }
