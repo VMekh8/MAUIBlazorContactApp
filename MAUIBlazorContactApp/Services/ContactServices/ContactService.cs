@@ -16,7 +16,6 @@ namespace MAUIBlazorContactApp.Services.ContactServices
         public ContactService(string dbPath)
         {
             _dbPath = dbPath;
-            InitAsync();
         }
 
         private async Task InitAsync()

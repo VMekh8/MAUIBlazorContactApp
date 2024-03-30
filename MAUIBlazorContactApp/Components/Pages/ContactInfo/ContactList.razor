@@ -1,0 +1,73 @@
+﻿@page "/contlist"
+@using MAUIBlazorContactApp.Data
+@using MAUIBlazorContactApp.Services.ContactServices
+@inject IContactRepository _contact
+@inject NavigationManager _nav
+
+<h3>ContactList</h3>
+
+<p>This component demonstrates showing data.</p>
+
+@if (contactList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button type="button" class="btn btn-success" @onclick="AddNewContact">Add new Contact</button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contact in contactList)
+            {
+                <tr>
+                    <td>@contact.Id</td>
+                    <td>@contact.Name</td>
+                    <td>@contact.Surname</td>
+                    <td>@contact.PhoneNumber</td>
+                    <td>@contact.Email</td>
+                    <td>
+                        <button type="button" class="btn btn-info" @onclick="() => UpdateContact(contact)">Edit</button>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeleteContact(contact)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private IEnumerable<ContactInfo> contactList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contactList = await _contact.GetContactsAsync();
+    }
+
+    private async Task AddNewContact()
+    {
+        _nav.NavigateTo("addupdatecontactinfo");
+    }
+
+    private async Task UpdateContact(ContactInfo contact)
+    {
+        _nav.NavigateTo($"updatecontactinfo/{contact.Id}");
+    }
+
+    private async Task DeleteContact(ContactInfo contact)
+    {
+        await _contact.DeleteContactAsync(contact.Id);
+        contactList = await _contact.GetContactsAsync();
+        this.StateHasChanged();
+    }
+}
