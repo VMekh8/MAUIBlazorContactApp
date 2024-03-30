@@ -1,0 +1,31 @@
+﻿@page "/addupdatecontactinfo"
+<h3>Add Update Contact Info</h3>
+<div class="container">
+    <div class="input-group mb-3">
+        <input type="text" @bind="UserId" class="form-control" placeholder="Id" aria-label="Id" aria-describedby="basic-addon1" readonly>
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="text" @bind="UserName" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    
+    <div class="input-group mb-3">
+        <input type="text" @bind="UserSurname" class="form-control" placeholder="Surname" aria-label="Surname" aria-describedby="basic-addon2">
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="text" @bind="UserPhoneNumber" class="form-control" placeholder="Phone Number" aria-label="Phone Number" aria-describedby="basic-addon2">
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="text" @bind="UserEmail" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon2">
+    </div>
+</div>
+
+@code {
+    public int UserId = 0;
+    public string UserName = "";
+    public string? UserSurname = "";
+    public string UserPhoneNumber = "";
+    public string? UserEmail = "";
+}
